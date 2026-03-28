@@ -12,4 +12,11 @@ class DayWeatherModel extends DayWeather {
       hours: res['hours']
           .map<WeatherModel>((json) => WeatherModel.fromJson(json))
           .toList());
+
+  DayWeather toEntity() => DayWeather(
+    name: name,
+    dateTime: dateTime,
+    weather: (weather as WeatherModel).toEntity(),
+    hours: hours?.map((h) => (h as WeatherModel).toEntity()).toList(),
+  );
 }

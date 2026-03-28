@@ -15,12 +15,13 @@ abstract class BaseRemoteDataSource{
 }
 
 class RemoteDataSource implements BaseRemoteDataSource{
+  final Dio _dio;
+  RemoteDataSource(this._dio);
 
   @override
   Future<WeatherModel?> getWeatherByCountryName(String countryName) async{
     try{
-      final response = await Dio().get('${AppConstance.baseUrl}/weather?q=$countryName&appid=${AppConstance.apiKey}');
-      print(response);
+      final response = await _dio.get('/weather?q=$countryName&appid=${AppConstance.apiKey}');
       return WeatherModel.fromJson(response.data);
     }catch(e, s){
       print('$e, $s');
@@ -31,18 +32,13 @@ class RemoteDataSource implements BaseRemoteDataSource{
   @override
   Future<List<DayWeatherModel>?> getDailyWeatherByAddress(WeatherParameters parameter) async{
     try{
-      print('here:   ${AppConstance.getWeatherPath(parameter.cityName)} ');
-      final response = await Dio().get(AppConstance.getWeatherPath(parameter.cityName));
+      final response = await _dio.get(AppConstance.getWeatherPath(parameter.cityName));
       final parsed = response.data['days'].cast<Map<String, dynamic>>();
-      print(response);
       return parsed.map<DayWeatherModel>((json)=> DayWeatherModel.fromJson(json, parameter.cityName)).toList();
     }on DioException catch(e, s){
-      print('error:    ${e.message}, $s');
       return null;
     }catch(e, s){
-      print('error:    $e, $s');
       return null;
     }
-
   }
 }

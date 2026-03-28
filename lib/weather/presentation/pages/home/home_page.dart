@@ -47,7 +47,7 @@ class HomePage extends StatelessWidget {
                   builder: (context, state) {
                     switch (state.dailyWeatherState) {
                       case RequestState.loading:
-                        return const HomeShimmer();
+                        return const RepaintBoundary(child: HomeShimmer());
                       case RequestState.loaded:
                         return RefreshIndicator(
                           onRefresh: () async {
@@ -154,7 +154,7 @@ class HomePage extends StatelessWidget {
                                 ),
                                 const SizedBox(
                                   height: 150,
-                                  child: HourlyWeather(),
+                                  child: RepaintBoundary(child: HourlyWeather()),
                                 ),
                                 const SizedBox(height: 24),
                               ],

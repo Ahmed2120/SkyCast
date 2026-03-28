@@ -9,6 +9,8 @@ import 'weather/presentation/pages/home/home_page.dart';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import 'package:weather_app/core/utility/app_theme.dart';
+
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
@@ -20,9 +22,10 @@ class WeatherApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      theme: AppTheme.lightTheme,
+      home: const HomePage(),
     );
   }
 }

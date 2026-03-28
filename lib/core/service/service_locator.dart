@@ -1,4 +1,6 @@
+import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:weather_app/core/utility/consts.dart';
 import 'package:weather_app/weather/domain/repository/base_weather_repository.dart';
 
 import '../../weather/data/datasource/remote_datasource.dart';
@@ -10,11 +12,28 @@ final sl = GetIt.instance;
 
 class ServiceLocator{
   void init(){
+    // Networking
+    sl.registerLazySingleton<Dio>(() => Dio(BaseOptions(
+      baseUrl: AppConstance.baseUrl,
+      receiveDataWhenStatusError: true,
+      connectTimeout: const Duration(seconds: 20),
+      receiveTimeout: const Duration(seconds: 20),
+    ))..interceptors.add(LogInterceptor(
+      requestHeader: true,
+      requestBody: true,
+      responseHeader: true,
+      responseBody: true,
+      error: true,
+    )));
 
-  sl.registerLazySingleton<BaseRemoteDataSource>(() => RemoteDataSource());
-  sl.registerLazySingleton<BaseWeatherRepository>(() => WeatherRepository(sl()));
-  sl.registerLazySingleton<GetWeatherByCountry>(() => GetWeatherByCountry(sl()));
-  sl.registerLazySingleton<GetDailyWeather>(() => GetDailyWeather(sl()));
-
+    // Data Sources
+    sl.registerLazySingleton<BaseRemoteDataSource>(() => RemoteDataSource(sl()));
+    
+    // Repositories
+    sl.registerLazySingleton<BaseWeatherRepository>(() => WeatherRepository(sl()));
+    
+    // Use Cases
+    sl.registerLazySingleton<GetWeatherByCountry>(() => GetWeatherByCountry(sl()));
+    sl.registerLazySingleton<GetDailyWeather>(() => GetDailyWeather(sl()));
   }
 }

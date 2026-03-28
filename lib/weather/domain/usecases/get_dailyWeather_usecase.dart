@@ -1,18 +1,17 @@
 import 'package:weather_app/core/usecase/base_usecase.dart';
-import 'package:weather_app/weather/data/model/dayWeather_model.dart';
-import 'package:weather_app/weather/domain/entities/weather.dart';
+import 'package:weather_app/core/utility/result.dart';
 
 import '../entities/day_weather.dart';
 import '../repository/base_weather_repository.dart';
 
-class GetDailyWeather extends BaseUseCase<List<DayWeather>, WeatherParameters>{
+class GetDailyWeather extends BaseUseCase<Result<List<DayWeather>>, WeatherParameters>{
 
   final BaseWeatherRepository repository;
 
   GetDailyWeather(this.repository);
 
   @override
-  Future<List<DayWeather>> call(WeatherParameters parameters) async{
+  Future<Result<List<DayWeather>>> call(WeatherParameters parameters) async{
     return await repository.getDailyWeatherByAddress(parameters);
   }
 }

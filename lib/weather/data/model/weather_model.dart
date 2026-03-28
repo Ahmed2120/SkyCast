@@ -36,4 +36,22 @@ class WeatherModel extends Weather {
         res['description'],
         res['conditions'] ?? '',
       );
+
+  Weather toEntity() => Weather(
+    dateTime,
+    preciptype,
+    icon,
+    pressure,
+    humidity,
+    temp,
+    wind,
+    feelsLike,
+    uvIndex,
+    precipProb,
+    visibility,
+    sunrise,
+    sunset,
+    description,
+    conditions,
+  );
 }

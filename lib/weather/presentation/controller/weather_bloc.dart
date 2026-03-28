@@ -1,36 +1,34 @@
-import 'dart:async';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/core/utility/enums.dart';
+import 'package:weather_app/core/utility/result.dart';
 import 'package:weather_app/weather/presentation/controller/weather_event.dart';
 import 'package:weather_app/weather/presentation/controller/weather_state.dart';
 
-import '../../data/datasource/remote_datasource.dart';
-import '../../data/repository/weather_repository.dart';
-import '../../domain/entities/weather.dart';
-import '../../domain/repository/base_weather_repository.dart';
 import '../../domain/usecases/get_weather_by_country.dart';
 
 class WeatherBloc extends Bloc<WeatherEvent, WeatherState>{
-  GetWeatherByCountry getWeatherByCountry;
-  WeatherBloc(this.getWeatherByCountry) : super(const WeatherState()){
-    on<GetWeatherByCityNameEvent>((event, emit) async{
-      // emit(state.copyWith(weatherState: RequestState.loading));
-      //
-      // final result = await getWeatherByCountry.execute(event.cityName);
-      // emit(state.copyWith(weather: result, weatherState: RequestState.loaded));
+  final GetWeatherByCountry _getWeatherByCountry;
 
+  WeatherBloc(this._getWeatherByCountry) : super(const WeatherState()){
+    on<GetWeatherByCityNameEvent>((event, emit) async{
       emit(state.copyWith(weatherState: RequestState.loading));
 
-      final result2 = await getWeatherByCountry.call(WeatherParameter(event.cityName));
-      emit(state.copyWith(weather: result2, weatherState: RequestState.loaded));
+      final result = await _getWeatherByCountry.call(WeatherParameter(event.cityName));
 
+      result.fold(
+        (data) => emit(state.copyWith(
+          weather: data,
+          weatherState: RequestState.loaded,
+        )),
+        (failure) => emit(state.copyWith(
+          weatherState: RequestState.error,
+          message: failure.message,
+        )),
+      );
     });
 
     on<SearchEvent>((event, emit) async{
-
       emit(state.copyWith(isActiveSearch: event.isActiveSearch));
-
     });
   }
 }

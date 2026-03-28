@@ -26,6 +26,10 @@ class AppColors {
     return isActive ? const Color(0xFF313341) : const Color(0xFFD6996B);
   }
 
+  static const Color primaryColor = Color(0xFFF39876);
+  static const Color secondaryColor = Color(0xFFE2A272);
+  static const Color backgroundColor = Color(0xFFFEE3BC);
+
   // Shimmer Colors for current background
   static final Color shimmerBase = Colors.white.withOpacity(0.4);
   static final Color shimmerHighlight = Colors.white.withOpacity(0.2);
